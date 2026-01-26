@@ -62,3 +62,31 @@ if (lightboxTrigger && lightbox) {
     }
   });
 }
+
+const soundToggles = document.querySelectorAll(".video-sound-toggle");
+
+soundToggles.forEach((toggle) => {
+  const wrapper = toggle.closest(".video-embed");
+  const video = wrapper ? wrapper.querySelector("video") : null;
+
+  if (!video) {
+    return;
+  }
+
+  const updateState = () => {
+    const isMuted = video.muted;
+    toggle.setAttribute("aria-pressed", String(!isMuted));
+    toggle.setAttribute("aria-label", isMuted ? "Ativar som" : "Silenciar som");
+    toggle.textContent = isMuted ? "Som" : "Mudo";
+  };
+
+  updateState();
+
+  toggle.addEventListener("click", () => {
+    video.muted = !video.muted;
+    if (!video.paused) {
+      video.play().catch(() => {});
+    }
+    updateState();
+  });
+});
